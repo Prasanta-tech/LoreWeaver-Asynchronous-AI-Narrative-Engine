@@ -5,7 +5,6 @@ import LoadingStatus from "./LoadingStatus.jsx";
 import StoryGame from "./StoryGame.jsx";
 import {API_BASE_URL} from "../util.js";
 
-
 function StoryLoader() {
     const {id} = useParams();
     const navigate = useNavigate();
@@ -27,9 +26,9 @@ function StoryLoader() {
             setLoading(false)
         } catch (err) {
             if (err.response?.status === 404) {
-                setError("Story is not found.")
+                setError("This chronicle has been lost to time.")
             } else {
-                setError("Failed to load story")
+                setError("Failed to summon the narrative.")
             }
         } finally {
             setLoading(false)
@@ -45,19 +44,23 @@ function StoryLoader() {
     }
 
     if (error) {
-        return <div className="story-loader">
-            <div className="error-message">
-                <h2>Story Not Found</h2>
-                <p>{error}</p>
-                <button onClick={createNewStory}>Go to Story Generator</button>
+        return (
+            <div className="story-loader" style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+                <div className="error-message" style={{ background: "rgba(20, 20, 25, 0.8)", border: "1px solid rgba(255, 255, 255, 0.1)", padding: "3rem", borderRadius: "8px", textAlign: "center", backdropFilter: "blur(10px)" }}>
+                    <h2 style={{ fontFamily: "'Cinzel', serif", color: "#e2e2e9", marginBottom: "1rem" }}>Chronicle Not Found</h2>
+                    <p style={{ color: "#888899", marginBottom: "2rem" }}>{error}</p>
+                    <button onClick={createNewStory}>Return to the Loom</button>
+                </div>
             </div>
-        </div>
+        )
     }
 
     if (story) {
-        return <div className="story-loader">
-            <StoryGame story={story} onNewStory={createNewStory} />
-        </div>
+        return (
+            <div className="story-loader" style={{ width: "100%", maxWidth: "800px" }}>
+                <StoryGame story={story} onNewStory={createNewStory} />
+            </div>
+        )
     }
 }
 

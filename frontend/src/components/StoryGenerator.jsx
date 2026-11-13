@@ -5,7 +5,6 @@ import ThemeInput from "./ThemeInput.jsx";
 import LoadingStatus from "./LoadingStatus.jsx";
 import {API_BASE_URL} from "../util.js";
 
-
 function StoryGenerator() {
     const navigate = useNavigate()
     const [theme, setTheme] = useState("")
@@ -44,7 +43,7 @@ function StoryGenerator() {
             pollJobStatus(job_id)
         } catch (e) {
             setLoading(false)
-            setError(`Failed to generate story: ${e.message}`)
+            setError(`Failed to weave narrative: ${e.message}`)
         }
     }
 
@@ -57,12 +56,12 @@ function StoryGenerator() {
             if (status === "completed" && story_id) {
                 fetchStory(story_id)
             } else if (status === "failed" || jobError) {
-                setError(jobError || "Failed to generate story")
+                setError(jobError || "The weave has collapsed. Failed to generate story.")
                 setLoading(false)
             }
         } catch (e) {
             if (e.response?.status !== 404) {
-                setError(`Failed to check story status: ${e.message}`)
+                setError(`Connection to the void lost: ${e.message}`)
                 setLoading(false)
             }
         }
@@ -74,7 +73,7 @@ function StoryGenerator() {
             setJobStatus("completed")
             navigate(`/story/${id}`)
         } catch (e) {
-            setError(`Failed to load story: ${e.message}`)
+            setError(`Failed to materialize story: ${e.message}`)
             setLoading(false)
         }
     }
@@ -87,16 +86,20 @@ function StoryGenerator() {
         setLoading(false)
     }
 
-    return <div className="story-generator">
-        {error && <div className="error-message">
-            <p>{error}</p>
-            <button onClick={reset}>Try Again</button>
-        </div>}
+    return (
+        <div className="story-generator" style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
+            {error && (
+                <div className="error-message" style={{ background: "rgba(225, 29, 72, 0.1)", border: "1px solid rgba(225, 29, 72, 0.3)", padding: "2rem", borderRadius: "8px", textAlign: "center", marginBottom: "2rem" }}>
+                    <p style={{ color: "#fda4af", marginBottom: "1.5rem" }}>{error}</p>
+                    <button onClick={reset}>Forge a New Path</button>
+                </div>
+            )}
 
-        {!jobId && !error && !loading && <ThemeInput onSubmit={generateStory}/>}
+            {!jobId && !error && !loading && <ThemeInput onSubmit={generateStory}/>}
 
-        {loading && <LoadingStatus theme={theme} />}
-    </div>
+            {loading && <LoadingStatus theme={theme} />}
+        </div>
+    )
 }
 
 export default StoryGenerator
